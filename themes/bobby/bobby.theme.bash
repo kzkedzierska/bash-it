@@ -22,12 +22,21 @@ function __bobby_clock() {
 	fi
 }
 
+function __check_conda() {
+	if [ "${CONDA_DEFAULT_ENV}" == "" ]; then
+		printf ""
+	else
+		printf "(${CONDA_DEFAULT_ENV}) "
+	fi
+}
+
 function prompt_command() {
 	PS1="\n$(battery_char) $(__bobby_clock)"
-	PS1+="${yellow?}$(ruby_version_prompt) "
+	PS1+="${yellow?}$(ruby_version_prompt)"
 	PS1+="${purple?}\h "
 	PS1+="${reset_color?}in "
 	PS1+="${green?}\w\n"
+	PS1+="$(__check_conda)"
 	PS1+="${bold_cyan?}$(scm_prompt_char_info) "
 	PS1+="${green?}→${reset_color?} "
 }
