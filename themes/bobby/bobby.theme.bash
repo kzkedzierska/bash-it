@@ -38,11 +38,20 @@ function __check_docker() {
 	fi
 }
 
+function __check_beaker() {
+	if [ -n "${BEAKER_JOB_ID:-}" ]; then
+		printf "${bold_blue?}[BEAKER]${reset_color?} "
+	else
+		printf ""
+	fi
+}
+
 function prompt_command() {
 	PS1="\n$(battery_char) $(__bobby_clock)"
 	PS1+="${yellow?}$(ruby_version_prompt)"
 	PS1+="${purple?}\h "
 	PS1+="$(__check_docker)"
+	PS1+="$(__check_beaker)"
 	PS1+="${reset_color?}in "
 	PS1+="${green?}\w\n"
 	PS1+="$(__check_conda)"
