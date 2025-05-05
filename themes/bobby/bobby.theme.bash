@@ -30,10 +30,19 @@ function __check_conda() {
 	fi
 }
 
+function __check_docker() {
+	if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+		printf "${bold_blue?}[DOCKER]${reset_color?} "
+	else
+		printf ""
+	fi
+}
+
 function prompt_command() {
 	PS1="\n$(battery_char) $(__bobby_clock)"
 	PS1+="${yellow?}$(ruby_version_prompt)"
 	PS1+="${purple?}\h "
+	PS1+="$(__check_docker)"
 	PS1+="${reset_color?}in "
 	PS1+="${green?}\w\n"
 	PS1+="$(__check_conda)"
