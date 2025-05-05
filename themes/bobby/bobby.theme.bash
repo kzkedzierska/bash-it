@@ -30,28 +30,27 @@ function __check_conda() {
 	fi
 }
 
-function __check_docker() {
-	if [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+function __check_environment() {
+	if [ -n "${BEAKER_JOB_ID:-}" ]; then
+		# In Beaker session - show only Beaker indicator
+		printf "${bold_blue?}[BEAKER]${reset_color?} "
+	elif [ -f /.dockerenv ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+		# In Docker but not Beaker - show Docker indicator
 		printf "${bold_blue?}[DOCKER]${reset_color?} "
 	else
+		# Not in Docker or Beaker
 		printf ""
 	fi
 }
 
-function __check_beaker() {
-	if [ -n "${BEAKER_JOB_ID:-}" ]; then
-		printf "${bold_blue?}[BEAKER]${reset_color?} "
-	else
-		printf ""
-	fi
-}
+# In your prompt command function, replace both checks with:
+PS1+="$(__check_environment)"
 
 function prompt_command() {
 	PS1="\n$(battery_char) $(__bobby_clock)"
 	PS1+="${yellow?}$(ruby_version_prompt)"
 	PS1+="${purple?}\h "
-	PS1+="$(__check_docker)"
-	PS1+="$(__check_beaker)"
+	PS1+="$(__check_environment)"
 	PS1+="${reset_color?}in "
 	PS1+="${green?}\w\n"
 	PS1+="$(__check_conda)"
