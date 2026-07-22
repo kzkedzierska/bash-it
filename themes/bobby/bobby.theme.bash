@@ -43,9 +43,6 @@ function __check_environment() {
 	fi
 }
 
-# In your prompt command function, replace both checks with:
-PS1+="$(__check_environment)"
-
 function prompt_command() {
 	PS1="\n$(battery_char) $(__bobby_clock)"
 	PS1+="${yellow?}$(ruby_version_prompt)"
